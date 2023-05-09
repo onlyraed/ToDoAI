@@ -1,0 +1,772 @@
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import WipeTransition kivy.uix.screenmanager.WipeTransition
+
+# Screen define section
+Screen_Manager:
+    id: scr_manager
+    #transition: WipeTransition()
+    transition: FadeTransition()
+    Login:
+    Registration:
+    MainPage:
+    TaskPage:
+    TaskDetailPage:
+    All_Tasks:
+    Task_Stats:
+#Custom button designs
+<CustButton@MDRectangleFlatButton>:
+    font_size: 14
+    bold: True
+    size_hint_x: 0.18
+#Custom Field designs
+<InputField@MDTextField>:
+    #font_size: 21
+    pos_hint: {"center_x": 0.5}
+    multiline: False
+    size_hint: 0.6, None
+    font_family: "Impact"#"Times New Roman"
+    hint_text_color: (180/255.0,180/255.0,180/255.0,1)
+    disabled_foreground_color: (1,1,1,1)
+    line_color_focus: '#654eb6'
+    #line_color_normal: '#654eb6'
+    hint_text_color_focus: '#654eb6'
+    text_color_focus: '#654eb6'
+    write_tab: False
+#Custom field designs with Icon
+<TextFieldWithIcon>:
+    size_hint_y: None
+    height: text_field.height
+
+    InputField:
+        id: text_field
+        hint_text: root.hint_text
+        helper_text: "Date Format --> 2000-01-31"
+        helper_text_mode: "persistent"
+
+    MDIconButton:
+        icon: root.icon
+        pos_hint: {"center_y": .5}
+        pos: text_field.width + (self.width*1.5), 0
+        theme_text_color: 'Custom'
+        text_color: '#654eb6'
+        on_release: app.show_date_picker(text_field) if text_field.hint_text != 'Attach Image...' else app.browser()
+
+#Custom Radio button designs
+<RadioButton>:
+    adaptive_height: True
+    # check box
+    MDCheckbox:
+        id: range_val
+        group: root.group
+        size_hint: None, None
+        size: dp(35), dp(35)
+        pos_hint: {'center_y': 0.5}
+        color_active: '#654eb6'
+        color_inactive: '#654eb6'
+        on_active: app.root.get_screen('Task').set_range_level(range.text, self.group) if self.active else None
+    # label
+    MDLabel:
+        id: range
+        text: root.text
+        size_hint: None, None
+        adaptive_width: True
+        bold: True
+        theme_text_color: 'Custom'
+        text_color: '#654eb6'
+
+
+<Task_View>:
+    text: root.text  #"One-line item"
+    theme_text_color: 'Custom'
+    text_color: '#654eb6'
+    divider_color: '#654eb6'
+    # left icon
+    IconLeftWidget:
+        icon: "calendar-check"
+        theme_text_color: 'Custom'
+        text_color: root.color
+# Custom Task Card designs
+<Task_Card>:
+    radius: [30,]
+    adaptive_height: True
+    size_hint_y: None
+    md_bg_color: root.color
+    padding: 50, 0
+    spacing: 30
+    # icon
+    MDIcon:
+        icon: 'circle-outline'
+        pos_hint: {'center_y': 0.5}
+        theme_text_color: "Custom"
+        text_color: 'white'
+    # label
+    MDLabel:
+        text: root.text
+        font_size: self.width*0.04
+        bold: True
+        pos_hint: {'center_y': 0.5}
+        adaptive_height: True
+        size_hint_y: None
+        theme_text_color: "Custom"
+        text_color: 'white'
+
+
+# Screen Login
+<Login>:
+    id: Log_in
+    name: "Login"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: 0, 0, 0, 0
+        md_bg_color: '#654eb6'
+        MDCard:
+            size_hint_y: 0.4
+            Image:
+                #source: 'login.png'
+                source: 'images/task1.jpeg'
+                size: self.texture_size
+                allow_stretch: True
+                keep_ratio: False
+
+        MDCard:
+            orientation: "vertical"
+            radius: [80, 80, 0, 0]
+            adaptive_height: True
+            padding: 0, 100, 0, 0
+            spacing: 80
+            elevation: 5
+            MDLabel:
+                text: 'Log In'
+                font_size: (self.width)*0.07
+                theme_text_color: 'Custom'
+                text_color: '#654eb6'
+                font_family: "Times New Roman"
+                bold: True
+                halign: 'center'
+                #font_name: "arial"
+                markup: True
+                size_hint_y: None
+                #pos_hint: {"y": 0.20, "Bottom": 1}
+
+        # text fields parts
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: 20
+                adaptive_height: True
+                InputField:
+                    id: Username
+                    pos_hint: {"center_x": 0.5}
+                    multiline: False
+                    line_color_focus: '#654eb6'
+                    hint_text_color_focus: '#654eb6'
+                    text_color_focus: '#654eb6'
+                    #required: True
+                    #font_name: 'arial'
+                    hint_text: 'Username'
+                    on_text_validate: Password.focus=True
+
+                InputField:
+                    id: Password
+                    pos_hint: {"center_x": 0.5}
+                    multiline: False
+                    allow_copy: False
+                    #required: True
+                    hint_text: 'Password'
+                    password: True
+            MDBoxLayout:
+                #padding: 200, 0, 200, 0
+                spacing: 50
+                size_hint: 0.5,None
+                pos_hint: {'center_x': 0.5}
+                MDRaisedButton:
+                    text: "Login"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.12
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: Log_in.Check_login()
+
+                CustButton:
+                    text: "Registration"
+                    #pos_hint: {"x": 0.20, "top": 0.25}
+                    size_hint_x: 0.28
+                    font_size: (self.width)*0.12
+                    theme_text_color: "Custom"
+                    text_color: '#654eb6'
+                    line_color: '#654eb6'
+                    on_press: app.root.current = 'Registration'
+
+            Widget:
+
+# Registration Screen
+<Registration>:
+    id: Screen_registration
+    name: "Registration"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: 0, 0, 0, 0
+        md_bg_color: '#654eb6'
+        MDCard:
+
+            size_hint_y: 0.25
+            Image:
+                #source: 'login.png'
+                source: 'images/task1.jpeg'
+
+                size: self.texture_size
+                allow_stretch: True
+                keep_ratio: False
+                #img_opicity: 0.4
+        MDCard:
+            orientation: "vertical"
+            radius: [80, 80, 0, 0]
+            adaptive_height: True
+            padding: 0, 100, 0, 0
+            spacing: 50
+            elevation: 6
+            MDLabel:
+                text: 'Registration'
+                font_size: (self.width)*0.07
+                bold: True
+                halign: 'center'
+                theme_text_color: 'Custom'
+                text_color: '#654eb6'
+                bold: True
+                size_hint_y: None
+                font_family: "Times New Roman"
+                pos_hint: {"y": 0.35, "Bottom": 1}
+
+            # text fields parts
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: 10
+                adaptive_height: True
+                InputField:
+                    id: R_Username
+                    pos_hint: {"x": 0.2,"top":0.65}
+                    multiline: False
+                    hint_text: 'Username'
+                    focus: True
+                    on_text_validate: R_Password.focus=True
+                InputField:
+                    id: R_Password
+                    pos_hint: {"x": 0.2,"top":0.55}
+                    multiline: False
+                    allow_copy: False
+                    password: True
+                    hint_text: 'Password'
+                    on_text_validate: Confirm_password.focus=True
+                InputField:
+                    id: Confirm_password
+                    pos_hint: {"x": 0.2,"top":0.45}
+                    multiline: False
+                    password: True
+                    allow_copy: False
+                    hint_text: 'Confirm Password'
+                    on_text_validate: Email.focus=True
+                InputField:
+                    id: Email
+                    pos_hint: {"x": 0.2,"top":0.35}
+                    multiline: False
+                    hint_text: 'Email'
+
+            MDBoxLayout:
+                #padding: 200, 0, 200, 0
+                spacing: 50
+                size_hint: 0.5,None
+                pos_hint: {'center_x': 0.5}
+                #button's
+                MDRaisedButton:
+                    text: "Register"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.12
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: root.Check_registration()
+
+                CustButton:
+                    text: "Login"
+                    size_hint_x: 0.28
+                    font_size: (self.width)*0.12
+                    theme_text_color: "Custom"
+                    text_color: '#654eb6'
+                    line_color: '#654eb6'
+                    on_press: app.root.current = 'Login'
+            Widget:
+
+# Main Screen
+<MainPage>:
+    id: Main_Page
+    name: 'MainPage'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Task"
+            elevation: 4
+            pos_hint: {"top": 1}
+            md_bg_color: '#654eb6'
+            specific_text_color: (1,1,1,1)
+            left_action_items: [['menu', lambda x:nav_drawer.set_state("open")]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            #adaptive_height: True
+            #md_bg_color: 1,0,0.3,.3
+            padding: 20, 20, 0, 20
+            MDBoxLayout:
+                size_hint_y: 0.2
+                adaptive_height: True
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    padding: 50, 80
+                    spacing: 15
+                    size_hint_y: 0.2
+                    adaptive_height: True
+                    #md_bg_color: 1,1,0.3,1
+                    MDLabel:
+                        id: username
+                        text: 'Hi Username!'
+                        #halign: 'center'
+                        bold: True
+                        markup: True
+                        font_size: (self.width)*0.1
+                        adaptive_height: True
+                        theme_text_color: 'Custom'
+                        text_color: '#654eb6'
+
+                    MDLabel:
+                        text: root.greeting
+                        #halign: 'center'
+                        #bold: True
+                        markup: True
+                        font_size: (self.width)*0.07
+                        adaptive_height: True
+                        theme_text_color: 'Custom'
+                        text_color: '#654eb6'
+
+                    MDLabel
+                        text: root.today_total_tasks
+                        adaptive_height: True
+                        bold: True
+                        italic: True
+                        markup: True
+                        font_size: (self.width)*0.075
+                        theme_text_color: 'Custom'
+                        text_color: '#654eb6'
+                    MDLabel:
+                        text: '\n\n\n'
+                        adaptive_height: True
+                    MDLabel
+                        text: root.date #'Sunday - 18March, 2018'
+                        bold: True
+                        markup: True
+                        adaptive_height: True
+                        font_size: (self.width)*0.075
+                        theme_text_color: 'Custom'
+                        text_color: '#654eb6'
+                MDBoxLayout:
+                    Image:
+                        source: 'images/character.png'
+                        pos_hint: {'center_x': 2}
+                        size: self.parent.size
+                        keep_ratio: False
+                        allow_stretch: True
+
+
+            MDBoxLayout:
+                padding: 30, 0
+                orientation: 'vertical'
+                MDLabel
+                    text: "Task's"
+                    adaptive_height: True
+                    halign: 'center'
+                    bold: True
+                    italic: True
+                    markup: True
+                    font_size: (self.width)*0.035
+                    theme_text_color: 'Custom'
+                    text_color: '#654eb6'
+                MDScrollView:
+                    adaptive_height: True
+                    MDList:
+                        id: task_list
+
+
+    # hide able Drawer which contain the side menu
+    MDNavigationDrawer:
+        id: nav_drawer
+        radius: (0, 16, 16, 0)
+        md_bg_color: '#654eb6'
+        padding: 20
+        spacing: 100
+        elevation: 4
+        MDNavigationDrawerMenu:
+            Image:
+                #source: 'login.png'
+                source: 'images/task1.jpeg'
+                size: self.texture_size
+                allow_stretch: True
+                keep_ratio: False
+            # header text
+            MDNavigationDrawerHeader:
+                title: "Menu"
+                source: 'images/task1.jpeg'
+                spacing: "4dp"
+                padding: "12dp", 0, 0, "56dp"
+                bold: True
+                theme_text_color: 'Custom'
+                title_color: 'white'
+
+            MDNavigationDrawerItem
+                icon: "alpha-t-circle"
+                text: "New Task"
+                spacing: "4dp"
+                selected_color: '#654eb6'
+                icon_color: '#654eb6'
+                selected: True
+                on_release: app.root.current='Task'
+            MDNavigationDrawerDivider:
+                color: 'white'
+
+            MDNavigationDrawerItem
+                icon: "alpha-t-circle"
+                text: "ALL Tasks"
+                spacing: "4dp"
+                selected_color: '#654eb6'
+                icon_color: '#654eb6'
+                selected: True
+                on_release: root.which_option('All')
+            MDNavigationDrawerDivider:
+                color: 'white'
+            MDNavigationDrawerItem
+                icon: "check-all"
+                text: "Completed Tasks"
+                spacing: "4dp"
+                selected_color: '#654eb6'
+                icon_color: '#654eb6'
+                selected: True
+                on_release: root.which_option('Complete')
+            MDNavigationDrawerDivider:
+                color: 'white'
+            MDNavigationDrawerItem
+                icon: "chart-bar"
+                text: "Task Stats"
+                selected_color: '#654eb6'
+                icon_color: '#654eb6'
+                selected: True
+                on_release: app.root.current='task_stats'
+            MDNavigationDrawerDivider:
+                color: 'white'
+            MDNavigationDrawerItem
+                icon: "logout"
+                text: "Log Out"
+                selected_color: '#654eb6'
+                icon_color: '#654eb6'
+                selected: True
+                on_release: app.root.current = 'Login'
+
+    # plus button for new task
+    MDFloatingActionButton:
+        icon: "plus"
+        md_bg_color: '#654eb6'
+        pos_hint:{'center_x':0.92 , 'center_y': 0.08}
+        on_press: app.root.current = 'Task'
+
+# add new task screen
+<TaskPage>:
+    id: Task
+    name: 'Task'
+    MDBoxLayout:
+        orientation: 'vertical'
+        # top app bar
+        MDTopAppBar:
+            title: "New Task"
+            elevation: 4
+            pos_hint: {"top": 1}
+            md_bg_color: '#654eb6'
+            specific_text_color: (1,1,1,1)
+            left_action_items: [['arrow-left', lambda x: app.home_page()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            #adaptive_height: True
+            #md_bg_color: 1,0,0.3,.3
+            padding: 20, 50, 20, 100
+
+            MDLabel:
+                text: 'Add Task'
+                adaptive_height: True
+                halign: 'center'
+                bold: True
+                markup: True
+                font_size: (self.width)*0.045
+                theme_text_color: 'Custom'
+                text_color: '#654eb6'
+
+            InputField:
+                id: task_name
+                hint_text: 'Task Name'
+
+            TextFieldWithIcon:
+                id: task_date
+                hint_text: 'Task Date'
+                icon: "calendar-range"
+
+
+            MDBoxLayout:
+                adaptive_height: True
+                size_hint_x: 0.6
+                pos_hint: {'center_x' :0.5}
+                MDLabel:
+                    text: 'Range:'
+                    font_size: (self.width)*0.32
+                    bold: True
+                    theme_text_color: 'Custom'
+                    text_color: '#654eb6'
+
+                    adaptive_width: True
+                RadioButton:
+                    text: 'Days'
+                    group: 'range'
+                RadioButton:
+                    text: 'Weeks'
+                    group: 'range'
+                RadioButton:
+                    text: 'Years'
+                    group: 'range'
+
+            MDBoxLayout:
+                adaptive_height: True
+                size_hint_x: 0.6
+                pos_hint: {'center_x' :0.5}
+                MDLabel:
+                    text: 'Level:'
+                    font_size: (self.width)*0.32
+                    bold: True
+                    theme_text_color: 'Custom'
+                    text_color: '#654eb6'
+                    adaptive_width: True
+                RadioButton:
+                    text: 'High'
+                    group: 'importance'
+                RadioButton:
+                    text: 'Mid'
+                    group: 'importance'
+                RadioButton:
+                    text: 'Low'
+                    group: 'importance'
+
+            InputField:
+                id: quote
+                hint_text: 'Motivational Quotes'
+
+
+            MDBoxLayout:
+                size_hint_x: 0.6
+                pos_hint: {'center_x': 0.5}
+                spacing: 10
+                MDCard:
+                    size_hint: 0.4, 1
+                    elevation: 3
+                    on_press: print('Attach Image')
+                    Image:
+                        id: attach_image
+                        text: 'Image'
+                        source: ''
+                        size: self.texture_size
+                        allow_stretch: True
+                        keep_ratio: False
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    adaptive_width: True
+                    pos_hint: {'center_y': 0.75}
+                    MDIconButton:
+                        icon: 'image-area'
+                        pos_hint: {'center_y': 0.5}
+                        theme_text_color: 'Custom'
+                        text_color: '#654eb6'
+                        on_press: root.file_browser()#attach_image.source='images/character.png'
+                    MDLabel:
+                        text: 'Attach Image'
+                        adaptive_height: True
+                        theme_text_color: 'Custom'
+                        text_color: '#654eb6'
+            MDBoxLayout:
+                padding: 0, 50, 0, 0
+                spacing: 50
+                size_hint: 0.6, None
+                pos_hint: {'center_x': 0.5}
+                MDRaisedButton:
+                    text: "Add"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.1
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: root.add_task() # Log_in.Check_login()
+                    #on_release: app.root.current('MainPage') if password.text=='admin' and L_username.text.upper()=='MALIK' else 'main'
+
+                CustButton:
+                    text: "Clear"
+                    #pos_hint: {"x": 0.20, "top": 0.25}
+                    size_hint_x: 0.28
+                    font_size: (self.width)*0.1
+                    theme_text_color: "Custom"
+                    text_color: '#654eb6'
+                    line_color: '#654eb6'
+                    on_press: root.clear_data() #app.root.current = 'Registration'
+            # empty widget
+            Widget:
+# Task detail info Screen
+<TaskDetailPage>:
+    id: Task_detail
+    name: 'Task_detail'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Task Info"
+            elevation: 4
+            pos_hint: {"top": 1}
+            md_bg_color: '#654eb6'
+            specific_text_color: (1,1,1,1)
+            left_action_items: [['arrow-left', lambda x: app.home_page()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: 20, 40, 20, 100
+            spacing: 10
+            MDCard:
+                md_bg_color: '#654eb6'
+                size_hint_x: 0.95
+                pos_hint: {'center_x': 0.5}
+                orientation: 'vertical'
+                MDLabel:
+                    id: task_id
+                    text: 'Id'
+                    size_hint: 0,0
+                    font_size: 0
+                    adaptive_height: True
+                    adaptive_width: True
+                    #md_bg_color: 1,0,0,1
+                MDLabel:
+                    id: detail
+                    text: ''
+                    halign: 'center'
+                    #bold: True
+                    markup: True
+                    font_size: (self.width) * 0.035
+                    theme_text_color: "Custom"
+                    text_color: 'white'
+
+            MDBoxLayout:
+                padding: 50,0
+                Image:
+                    id: task_img
+                    source: 'images/character.png'
+
+            MDBoxLayout:
+                padding: 0, 50, 0, 0
+                spacing: 50
+                size_hint: 0.6, None
+                pos_hint: {'center_x': 0.5}
+                MDRaisedButton:
+                    text: "Completed"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.1
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: root.task_completed_or_delete('update') # Log_in.Check_login()
+
+                CustButton:
+                    text: "Delete"
+                    #pos_hint: {"x": 0.20, "top": 0.25}
+                    size_hint_x: 0.28
+                    font_size: (self.width)*0.1
+                    theme_text_color: "Custom"
+                    text_color: '#654eb6'
+                    line_color: '#654eb6'
+                    on_press: root.task_completed_or_delete('delete') #app.root.current = 'Registration'
+
+# Show completed or all task Screen
+<All_Tasks>:
+    id: all_task
+    name: 'all_task'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            id: bar_title
+            title: "All Task's"
+            elevation: 4
+            pos_hint: {"top": 1}
+            md_bg_color: '#654eb6'
+            specific_text_color: (1,1,1,1)
+            left_action_items: [['arrow-left', lambda x: app.home_page()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: 60, 40, 60, 40
+            spacing: 10
+
+            MDScrollView:
+                #md_bg_color: 0,0,1,1
+
+                MDList:
+                    id: show_task_area
+                    spacing: 30
+
+# task stats Screen
+<Task_Stats>:
+    id: task_stats
+    name: 'task_stats'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Task Stats"
+            elevation: 4
+            pos_hint: {"top": 1}
+            md_bg_color: '#654eb6'
+            specific_text_color: (1,1,1,1)
+            left_action_items: [['arrow-left', lambda x: app.home_page()]]
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: 20, 40, 20, 100
+            spacing: 10
+            MDBoxLayout:
+                padding: 20, 20
+                spacing: 50
+                adaptive_height: True
+                MDRaisedButton:
+                    text: "Day"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.1
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: root.stats('Day') # Log_in.Check_login()
+
+                MDRaisedButton:
+                    text: "Week"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.1
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: root.stats('Week') # Log_in.Check_login()
+
+                MDRaisedButton:
+                    text: "All"
+                    #pos_hint: {"x": 0.60, "top": 0.25}
+                    font_size: (self.width)*0.1
+                    size_hint_x: 0.28
+                    md_bg_color: '#654eb6'
+                    on_press: root.stats('All') # Log_in.Check_login()
+
+            MDBoxLayout:
+                padding: 50, 20
+                id: chart
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: 50, 20
+                MDLabel:
+                    id: info
+                    text: ''
+                    theme_text_color: "Custom"
+                    halign: 'center'
+                    text_color: '#654eb6'
+                    bold: True
+                    font_size: (self.width)*0.04

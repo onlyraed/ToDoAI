@@ -1,0 +1,5 @@
+Kivy==2.1.0
+Kivy-Garden==0.1.4
+kivymd==1.1.1
+matplotlib==3.7.1
+plyer==2.1.0
